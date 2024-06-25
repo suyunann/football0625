@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>足球分析</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <style>
+      * { box-sizing: border-box; }
+      body { font-family: Arial, sans-serif; display: flex; height: 100vh; margin: 0; }
+      .sidebar { flex: 0 0 15%; min-width: 150px; background: #333; color: white; padding: 10px; height: 100vh; display: flex; flex-direction: column; }
+      .main { flex: 1; padding: 20px; height: 100vh; overflow-y: auto; }
+      .right { flex: 0 0 25%; padding: 10px; background: #f1f1f1; height: 100vh; overflow-y: auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #ddd; text-align: left; padding: 8px; }
+      th { background-color: #555; color: white; }
+      input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; }
+      .header { background: #eee; padding: 10px; }
+      .navigation button { border: none; padding: 10px; width: 100%; margin: 5px 0; cursor: pointer; }
+      .navigation button:hover { background: #555; }
+      form {
+          background-color: #333;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+      }
+      input, select {
+          width: calc(100% - 22px);
+          padding: 10px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          border: none;
+          box-sizing: border-box;
+          background-color: #ddd;
+          color: #333;
+      }
+      button {
+          background-color: #6f42c1;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #5a35b5;
+      }
+      .conversion-section {
+          background-color: #333;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+      }
+      .conversion-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .input-group {
+          flex: 1;
+          margin-right: 10px;
+      }
+      input[type="text"] {
+          width: 100%;
+      }
+      th.colspan {
+          background-color: transparent;
+          padding: 0;
+      }
+      .header-background {
+          background-color: #D0D0D0;
+          display: block;
+          padding: 8px 20px;
+          border-radius: 10px;
+          text-align: center;
+          font-size: 24px;
+      }
+      .probability-container {
+          border: 2px solid #FFFFFF;
+          border-radius: 10px;
+          padding: 10px 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin: 10px 0;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .probability-label {
+          color: #FFFFFF;
+          font-weight: bold;
+          margin-bottom: 5px;
+      }
+      .probability-value {
+          color: #FF0000;
+          font-weight: bold;
+          margin-top: 5px;
+      }
+      .probability-label, .probability-value {
+          font-size: 20px;
+          font-weight: bold;
+          font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+      }
+      .probability-wrapper {
+          border: 2px solid #FFFFFF;
+          border-radius: 10px;
+          padding: 10px 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin: 10px 0;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          font-size: 24px;
+      }
+      .probability-value {
+          font-size: 20px;
+          font-weight: bold;
+      }
+      .probability-label {
+          font-size: 20px;
+          font-weight: bold;
+      }
+      tr:nth-child(even) {
+          background-color: transparent;
+      }
+      .match-info {
+          padding: 10px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+      }
+      .table-header-large {
+          font-size: 24px;
+      }
+      .probability-text {
+          color: #FF0000;
+      }
+      .right-side {
+          padding: 10px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .match-data-right div {
+          margin-bottom: 20px;
+      }
+      .team-name {
+          display: block;
+      }
+      .flex-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .team-info {
+          text-align: center;
+      }
+      .team-logo {
+          display: block;
+          margin: 0 auto;
+      }
+      .vs {
+          margin: 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <div class="sidebar">
+      <h1>足球比賽分析</h1>
+      <form id="teamForm" method="POST">
+        <label for="team">比賽選項</label>
+        <select id="team" name="team">
+          <option value=""></option>
+          <option value="team1">隊伍 1</option>
+          <option value="team2">隊伍 2</option>
+        </select>
+        <div id="dateSelection" style="display:none;">
+          <label for="date">日期</label>
+          <input type="date" id="date" name="date" />
+        </div>
+        <div id="teamOptions" style="display:none;">
+          <label for="team_options">隊伍選項</label>
+          <select id="team_options" name="team_options">
+            <option value=""></option>
+            <option value="option1">選項 1</option>
+            <option value="option2">選項 2</option>
+          </select>
+        </div>
+        <button type="submit" id="teamSubmit">分析</button>
+      </form>
+      <div class="conversion-section">
+        <h2>機率與賠率轉換</h2>
+        <div class="conversion-wrapper">
+          <div class="input-group">
+            <label for="probability-text">機率（%）：</label>
+            <input type="text" id="probability-text" placeholder="輸入機率" />
+          </div>
+          <div class="input-group">
+            <label for="odds-text">賠率：</label>
+            <input type="text" id="odds-text" placeholder="輸入賠率" />
+          </div>
+        </div>
+      </div>
+      <div class="conversion-section">
+        <h2>過關計算器</h2>
+        <label for="pass-count">選擇過關數：</label>
+        <select id="pass-count">
+          <option value="">請選擇過關數</option>
+          <option value="1">1關</option>
+          <option value="2">2關</option>
+          <option value="3">3關</option>
+          <option value="4">4關</option>
+          <option value="5">5關</option>
+          <option value="6">6關</option>
+          <option value="7">7關</option>
+          <option value="8">8關</option>
+        </select>
+        <div id="odds-inputs"></div>
+        <button id="calculate-parlay" style="margin-top: 20px;">
+          計算過關賠率
+        </button>
+      </div>
+      <div id="parlay-results" style="margin-top: 20px;">
+        <p id="total-odds">總賠率: 0</p>
+        <p id="potential-win">潛在贏利: 0</p>
+        <button class="btn btn-light" onclick="location.href='first.html'">
+          返回主頁
+        </button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="header-background">比賽結果</div>
+      <table>
+        <tr>
+          <td>
+            <div class="probability-label">主勝</div>
+            <div class="probability-value">60%</div>
+          </td>
+          <td>
+            <div class="probability-label">和局</div>
+            <div class="probability-value">25%</div>
+          </td>
+          <td>
+            <div class="probability-label">客勝</div>
+            <div class="probability-value">15%</div>
+          </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="6" class="table-header-large">讓分選項</th>
+        </tr>
+        <tr>
+          <td>主-0.5</td>
+          <td>主-1.5</td>
+          <td>主-2.5</td>
+          <td>主+0.5</td>
+          <td>主+1.5</td>
+          <td>主+2.5</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>受-0.5</td>
+          <td>受-1.5</td>
+          <td>受-2.5</td>
+          <td>受+0.5</td>
+          <td>受+1.5</td>
+          <td>受+2.5</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="4" class="table-header-large">大小球</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="probability-label">≥1</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≥2</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≥3</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≥4</div>
+            <div class="probability-value">30%</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="probability-label">≤1</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≤2</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≤3</div>
+            <div class="probability-value">30%</div>
+          </td>
+          <td>
+            <div class="probability-label">≤4</div>
+            <div class="probability-value">30%</div>
+          </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="3" class="table-header-large">比分</th>
+        </tr>
+        <tr>
+          <td>1:0</td>
+          <td>0:0</td>
+          <td>0:1</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>2:0</td>
+          <td>1:1</td>
+          <td>0:2</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>2:1</td>
+          <td>2:2</td>
+          <td>1:2</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>3:0</td>
+          <td>3:3</td>
+          <td>0:3</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>3:1</td>
+          <td>4:4</td>
+          <td>1:3</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>3:2</td>
+          <td>5:5</td>
+          <td>2:3</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+        <tr>
+          <td>其他</td>
+          <td>其他</td>
+          <td>其他</td>
+        </tr>
+        <tr>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+          <td class="probability-text">Probability</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="right">
+      <div class="match-info flex-container">
+        <div class="team-info">
+          <span class="team-name">隊伍1</span>
+          <img src="team1_logo.png" alt="隊伍1的標誌" class="team-logo" />
+        </div>
+        <span class="vs">vs</span>
+        <div class="team-info">
+          <span class="team-name">隊伍2</span>
+          <img src="team2_logo.png" alt="隊伍2的標誌" class="team-logo" />
+        </div>
+      </div>
+      <div class="right-side">
+        <div class="table-container">
+          <table>
+            <tr>
+              <th colspan="6" class="table-header-large">兩隊歷史資料</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="match-data-right">
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="6" class="table-header-large">主隊歷史資料</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="match-data-right">
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="6" class="table-header-large">客隊歷史資料</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="match-data-right">
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                  <div>Data1</div>
+                  <div>Data2</div>
+                  <div>Data3</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  document
+    .getElementById("probability-text")
+    .addEventListener("input", function (e) {
+      let probabilityValue = parseFloat(e.target.value);
+      if (probabilityValue > 100) {
+        probabilityValue = 100;
+        e.target.value = probabilityValue;
+      }
+      if (probabilityValue > 0 && probabilityValue <= 100) {
+        const oddsValue = (100 / probabilityValue).toFixed(2);
+        document.getElementById("odds-text").value = oddsValue;
+      } else {
+        document.getElementById("odds-text").value = "";
+      }
+    });
+
+  document.getElementById("odds-text").addEventListener("input", function (e) {
+    const oddsValue = parseFloat(e.target.value);
+    if (oddsValue > 1) {
+      const probabilityValue = (100 / oddsValue).toFixed(2);
+      document.getElementById("probability-text").value = probabilityValue;
+    } else {
+      document.getElementById("probability-text").value = "";
+    }
+  });
+
+  document.getElementById("pass-count").addEventListener("change", function () {
+    const passCount = parseInt(this.value, 10);
+    const oddsInputsContainer = document.getElementById("odds-inputs");
+    oddsInputsContainer.innerHTML = "";
+
+    for (let i = 1; i <= passCount; i++) {
+      const inputGroup = document.createElement("div");
+      inputGroup.className = "input-group";
+      const label = document.createElement("label");
+      label.textContent = `比賽${i}的賠率：`;
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "輸入賠率";
+
+      inputGroup.appendChild(label);
+      inputGroup.appendChild(input);
+      oddsInputsContainer.appendChild(inputGroup);
+    }
+  });
+
+  document
+    .getElementById("calculate-parlay")
+    .addEventListener("click", function () {
+      const inputs = document.querySelectorAll("#odds-inputs input");
+      let totalOdds = 1;
+      let isValid = true;
+
+      inputs.forEach((input) => {
+        const odds = parseFloat(input.value);
+        if (isNaN(odds) || odds <= 0) {
+          alert("請確保所有輸入的賠率都是有效的數字。");
+          isValid = false;
+          return;
+        }
+        totalOdds *= odds;
+      });
+
+      if (isValid) {
+        const potentialWin = (totalOdds * 100 - 100).toFixed(2);
+        document.getElementById(
+          "total-odds"
+        ).textContent = `總賠率: ${totalOdds.toFixed(2)}`;
+        document.getElementById(
+          "potential-win"
+        ).textContent = `潛在贏利: ${potentialWin}`;
+      }
+    });
+</script>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>堆疊條形圖及按鈕範例</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .button-container {
+          text-align: center;
+          margin: 20px;
+      }
+      .chart-container {
+          display: flex;
+          justify-content: space-around;
+      }
+      .chart-wrapper {
+          width: 45%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="button-container">
+      <button onclick="decrease()">-</button>
+      <input type="text" id="value" value="0.25/4" readonly />
+      <button onclick="increase()">+</button>
+    </div>
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        <h3>大</h3>
+        <canvas id="bigChart"></canvas>
+
+        <h3>小</h3>
+        <canvas id="smallChart"></canvas>
+      </div>
+    </div>
+
+    <script>
+      var value = 0.25;
+
+      function updateValue() {
+        document.getElementById("value").value = value + "/4";
+      }
+
+      function decrease() {
+        if (value > 0.25) {
+          value -= 0.25;
+          updateValue();
+        }
+      }
+
+      function increase() {
+        if (value < 4) {
+          value += 0.25;
+          updateValue();
+        }
+      }
+
+      var bigChartCtx = document.getElementById("bigChart").getContext("2d");
+      var smallChartCtx = document
+        .getElementById("smallChart")
+        .getContext("2d");
+
+      var data = {
+        labels: [""],
+        datasets: [
+          {
+            label: "贏",
+            data: [30],
+            backgroundColor: "#36a2eb",
+          },
+          {
+            label: "走水",
+            data: [30],
+            backgroundColor: "#ff6384",
+          },
+          {
+            label: "贏半",
+            data: [20],
+            backgroundColor: "#ffcd56",
+          },
+          {
+            label: "輸半",
+            data: [10],
+            backgroundColor: "#ff9f40",
+          },
+          {
+            label: "輸",
+            data: [10],
+            backgroundColor: "#4bc0c0",
+          },
+        ],
+      };
+
+      var options = {
+        indexAxis: "y",
+        scales: {
+          x: {
+            stacked: true,
+            ticks: {
+              callback: function (value) {
+                return value + "%";
+              },
+            },
+          },
+          y: {
+            stacked: true,
+          },
+        },
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
+        },
+        responsive: true,
+      };
+
+      var bigChart = new Chart(bigChartCtx, {
+        type: "bar",
+        data: data,
+        options: options,
+      });
+
+      var smallChart = new Chart(smallChartCtx, {
+        type: "bar",
+        data: data,
+        options: options,
+      });
+    </script>
+  </body>
+</html>

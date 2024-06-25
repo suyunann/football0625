@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>投注紀錄</title>
+    <style>
+      body{
+        background-color:#0D0D0D;
+
+      }
+      h1,td,label{
+        color:#D9D9D9;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      table, th, td {
+          border: 1px #BFBFBF;
+
+      }
+      th, td {
+          padding: 10px;
+          text-align: left;
+
+      }
+      th {
+          background-color:#260101;
+          color: white;
+
+      }
+      tr:nth-child(even) {
+          background-color: #0D0D0D;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>投注紀錄</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>League</th>
+          <th>Match</th>
+          <th>投注金額</th>
+          <th>投注項目</th>
+          <th>賠率</th>
+          <th>結果</th>
+        </tr>
+      </thead>
+      <tbody id="recordTable">
+        <!-- 這裡會動態插入投注紀錄 -->
+      </tbody>
+    </table>
+    <br />
+    <form id="bettingForm">
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required />
+      <label for="time">Time:</label>
+      <input type="time" id="time" name="time" />
+      <label for="league">League:</label>
+      <input type="text" id="league" name="league" />
+      <label for="hometeam">Match:</label>
+      <input type="text" id="hometeam" name="hometeam" required />
+      <label for="awayteam">投注金額:</label>
+      <input type="text" id="awayteam" name="awayteam" required />
+      <label for="bettingItem">投注項目:</label>
+      <input type="text" id="bettingItem" name="bettingItem" />
+      <label for="odds">賠率:</label>
+      <input type="text" id="odds" name="odds" />
+      <label for="result">結果:</label>
+      <select id="result" name="result">
+        <option value="贏">贏</option>
+        <option value="贏半">贏半</option>
+        <option value="走水">走水</option>
+        <option value="輸半">輸半</option>
+        <option value="輸">輸</option>
+      </select>
+      <button type="submit">加入</button>
+    </form>
+    <script>
+      document
+        .getElementById("bettingForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const date = document.getElementById("date").value;
+          const time = document.getElementById("time").value;
+          const league = document.getElementById("league").value;
+          const hometeam = document.getElementById("hometeam").value;
+          const awayteam = document.getElementById("awayteam").value;
+          const bettingItem = document.getElementById("bettingItem").value;
+          const odds = document.getElementById("odds").value;
+          const result = document.getElementById("result").value;
+
+          const table = document.getElementById("recordTable");
+          const row = table.insertRow();
+          row.insertCell(0).textContent = date;
+          row.insertCell(1).textContent = time;
+          row.insertCell(2).textContent = league;
+          row.insertCell(3).textContent = hometeam;
+          row.insertCell(4).textContent = awayteam;
+          row.insertCell(5).textContent = bettingItem;
+          row.insertCell(6).textContent = odds;
+          row.insertCell(7).textContent = result;
+
+          document.getElementById("bettingForm").reset();
+        });
+    </script>
+  </body>
+</html>
